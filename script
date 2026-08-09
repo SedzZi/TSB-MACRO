@@ -1,0 +1,279 @@
+#Requires AutoHotkey v2.0
+#SingleInstance Force
+
+panel := Gui("+AlwaysOnTop -Caption +Border +E0x20 +E0x80000 +ToolWindow", "")
+panel.BackColor := "000000"
+WinSetTransparent(150, panel.Hwnd)
+
+
+
+
+; |--------------------------------------------------------|
+; |---------------LUVİON NO GUİ TSB MACRO V1---------------|
+; |--------------------------------------------------------|
+; |----------------------MADE BY SEDZ----------------------|
+; |--------------------------------------------------------|
+
+
+
+
+
+; |-----------------------------------------------------|
+; |---------------VERY İMPORTANT SETTİNGS---------------|
+; |-----------------------------------------------------| 
+
+global robloxsensivity:= 0.4      ; Game Sensitivity
+global hotkeypanel := 1           ; Hotkey Panel  1 = on ----- 0 = off
+global exitmacrohk := "F1"        ; Exit Macro Hotkey
+global restartmacrohk := "F2"     ; Restart Macro Hotkey For Test Settings
+
+
+
+
+
+; |--------------------------------------------|
+; |---------------MACRO SETTİNGS---------------|
+; |--------------------------------------------|
+
+;------------------------------------------------------------------------------------
+
+; LETHAL V1 MACRO CONTROL
+global lethalv1hk := "t"          ; Lethal V1 Hotkey
+global lethalv1macro := 0         ; Lethal V1 Macro  1 = on ----- 0 = off
+global lethalv1shiftlock := 1     ; 1 = Shiftlock Version ----- 0 = Unshiftlock Version
+global lethalv1flick := 1         ; 1 = Right Flick ----- 0 = Left Flick ----- For Shiftlock Version
+global lethalv1sleep := 210       ; Wait For Flick (1000 ms = 1 second ----- 230 ms = 0.23 second)
+
+;------------------------------------------------------------------------------------
+
+; LETHAL V2 MACRO CONTROL
+global lethalv2hk := "r"          ; Lethal V2 Hotkey
+global lethalv2macro := 0         ; Lethal V2 Macro  1 = on ----- 0 = off
+global lethalv2sleep := 180       ; Wait For Flick (1000 ms = 1 second ----- 180 ms = 0.18 second)
+
+;------------------------------------------------------------------------------------
+
+;TWİST V1 MACRO CONTROL
+global twistv1hk := "c"           ; Twist V1 Hotkey
+global twistv1macro := 0          ; Twist V1 Macro  1 = on ----- 0 = off
+
+;------------------------------------------------------------------------------------
+
+;TWİST V2 MACRO CONTROL
+global twistv2hk := "x"           ; Twist V2 Hotkey
+global twistv2macro := 0          ; Twist V2 Macro  1 = on ----- 0 = off
+global firstdegree := -60         ; Twist V2 First Flick Degree
+global tsleep := 160              ; Wait For Second Flick (1000 ms = 1 second ----- 160 ms = 0.16 second)
+global seconddegree := 86         ; Twist V2 Second Flick Degree
+
+;------------------------------------------------------------------------------------
+
+; SİDE FRONT DASH MACRO CONTROL
+global sidefrontdashhk := "e"     ; Side Front Dash Hotkey
+global sidefrontdashmacro := 0    ; TSide Front Dash  1 = on ----- 0 = off
+global sidedash := 1              ; 1 = Right Dash ----- 0 = Left Dash
+
+;------------------------------------------------------------------------------------
+
+
+
+
+
+; Sens Calculator For 1920x1080 Resolution :)
+global r1 := 360
+global r2 := -360
+global r3 := -100
+global r4 := 200
+global r5 := -110
+global r6 := 350
+global L1 := r1 / robloxsensivity
+global L2 := r2 / robloxsensivity
+global T1 := r3 / robloxsensivity
+global T2 := r4 / robloxsensivity
+global T3 := r5 / robloxsensivity
+global L3 := r6 / robloxsensivity
+
+
+; Degree Calculator For 1920x1080 Resolution :)
+global ref := 720
+global ref2 := ref / robloxsensivity
+global degree1 := (firstdegree/360) * ref2
+global degree2 := (seconddegree/360) * ref2
+
+
+panel.SetFont("s8 bold c00FF00", "Verdana")
+if (lethalv1macro=1)
+{
+    text := panel.Add("Text", "x10 y5 w280 BackgroundTrans", "Lethal V1 >> " "[" lethalv1hk "]")
+}
+if (lethalv2macro=1)
+{
+    panel.Add("Text", "x10 y+3 w280 BackgroundTrans", "Lethal V2 >> " "[" lethalv2hk "]")
+}
+if (twistv1macro=1)
+{
+    panel.Add("Text", "x10 y+3 w280 BackgroundTrans", "Twist V1 >> " "[" twistv1hk "]")
+}
+if (twistv2macro=1)
+{
+    panel.Add("Text", "x10 y+3 w280 BackgroundTrans", "Twist V2 >> " "[" twistv2hk "]")
+}
+if (sidefrontdashmacro=1)
+{
+    panel.Add("Text", "x10 y+3 w280 BackgroundTrans", "Side Front Dash >> " "[" sidefrontdashhk "]")
+}
+if (lethalv1macro=0 && lethalv2macro=0 && twistv1macro=0 && twistv2macro=0 && sidefrontdashmacro=0)
+{
+    panel.SetFont("s8 bold cff0000", "Verdana")
+    panel.Add("Text", "x10 y5 w280 BackgroundTrans", "No Macro Selected")
+}
+
+panel.SetFont("s7 bold ca7a4a4", "Verdana")
+panel.Add("Text", "x10 y80 w280 BackgroundTrans", "Exit Macro >> " "[" exitmacrohk "]")
+panel.Add("Text", "x120 y80 w280 BackgroundTrans", "Restart Macro >> " "[" restartmacrohk "]")
+
+if (hotkeypanel=1)
+{
+    panel.Show("w300 h100 x810 y0")
+}
+
+HotIfWinActive("ahk_exe RobloxPlayerBeta.exe")
+
+registeredHKs := Map()
+
+RegisterMacroHotkey(hk) {
+    if (hk != "" && !registeredHKs.Has(hk)) {
+        Hotkey("$" . hk, MasterHotkeyHandler)
+        registeredHKs[hk] := true
+    }
+}
+
+RegisterMacroHotkey(lethalv1hk)
+RegisterMacroHotkey(lethalv2hk)
+RegisterMacroHotkey(twistv1hk)
+RegisterMacroHotkey(twistv2hk)
+RegisterMacroHotkey(sidefrontdashhk)
+HotIf()
+Hotkey("~" . exitmacrohk, exitmacro)
+Hotkey("~" . restartmacrohk, restartmacro)
+
+
+MasterHotkeyHandler(HotkeyName) {
+    pressedHK := StrReplace(HotkeyName, "$", "")
+    if (pressedHK = lethalv1hk && lethalv1macro = 1) {
+        lethalv1()
+        return
+    }
+    if (pressedHK = lethalv2hk && lethalv2macro = 1) {
+        lethalv2()
+        return
+    }
+    if (pressedHK = twistv1hk && twistv1macro = 1) {
+        twistv1()
+        return
+    }
+    if (pressedHK = twistv2hk && twistv2macro = 1) {
+        twistv2()
+        return
+    }
+    if (pressedHK = sidefrontdashhk && sidefrontdashmacro = 1) {
+        sidefrontdash()
+        return
+    }
+}
+
+
+lethalv1()
+{
+    if (lethalv1macro = 1)
+    {
+        if (lethalv1shiftlock = 1)
+        {
+            if (lethalv1flick = 1)
+            {
+                Send("{q}")
+                Sleep(lethalv1sleep)
+                DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
+            }
+            else if (lethalv1flick = 0)
+            {
+                Send("{q}")
+                Sleep(lethalv1sleep)
+                DllCall("mouse_event", "UInt", 1, "Int", L2, "Int", 0)
+            }
+        }
+        else
+        {
+            Send("{q}")
+            Sleep(lethalv1sleep)
+            Send("{Shift}")
+        }
+    }
+}
+lethalv2()
+{
+    if (lethalv2macro = 1)
+    {
+        DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
+        Send("{q}")
+        Sleep(lethalv2sleep)
+        DllCall("mouse_event", "UInt", 1, "Int", L3, "Int", 0)
+    }
+}
+
+twistv1()
+{
+    if (twistv1macro = 1)
+    {
+        DllCall("mouse_event", "UInt", 1, "Int", T1, "Int", 0)
+        Send("{q}")
+        Sleep(170)
+        DllCall("mouse_event", "UInt", 1, "Int", T2, "Int", 0)
+        Sleep(90)
+        DllCall("mouse_event", "UInt", 1, "Int", T3, "Int", 0)
+    }
+}
+
+
+twistv2()
+{
+    if (twistv2macro = 1)
+    {
+        DllCall("mouse_event", "UInt", 1, "Int", degree1, "Int", 0)
+        Send("{q}")
+        Sleep(tsleep)
+        DllCall("mouse_event", "UInt", 1, "Int", degree2, "Int", 0)
+    }
+}
+
+
+sidefrontdash()
+{
+    if (sidefrontdashmacro = 1 && sidedash = 1)
+    {
+        Send("{q}")
+        Send("{d Down}")
+        Sleep(10)
+        Send("{q}")
+        Send("{d Up}")
+    }
+    if (sidefrontdashmacro = 1 && sidedash = 0)
+    {
+        Send("{q}")
+        Send("{a Down}")
+        Sleep(10)
+        Send("{q}")
+        Send("{a Up}")
+    }
+}
+
+exitmacro(hk)
+{
+    ExitApp()
+}
+
+
+restartmacro(hk)
+{
+    Reload()
+}
