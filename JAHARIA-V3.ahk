@@ -30,8 +30,8 @@ statuspanel.SetFont("s7.8 bold c00e1ff", "Segoe UI")
 global robloxsensivity:= 0.4      ; Game Sensitivity
 global hotkeypanel := 1           ; Hotkey Panel  1 = on ----- 0 = off
 global statuspanel1 := 1          ; Extra Status Panel  1 = on ----- 0 = off
-global robloxcheck1 := 1          ; Roblox On - Off Check For Hotkey Panel And Status Panel  1 = on ----- 0 = off
-global cordcheck := 1             ; Auto Coordination For Hotkey Panel And Status Panel  1 = on ----- 0 = off  (Requires Roblox Check to be enabled)
+global robloxcheck1 := 1          ; Roblox On - Off Check For Hotkey Panel And Status Panel
+global cordcheck := 1             ; Auto Coordination For Hotkey Panel And Status Panel -- Requires Roblox Check to be enabled
 global exitmacrohk := "F1"        ; Exit Macro Hotkey
 global restartmacrohk := "F2"     ; Restart Macro Hotkey For Test Settings
 global macrocontrolhk := "F3"     ; Macro Enabled - Disabled Button
@@ -392,12 +392,12 @@ solitude()
     Send("{LButton}")
     Sleep(110)
     Send("{Space Down}")
-    Sleep(400)
+    Sleep(410)
     Send("{LButton}")
-    Sleep(375)
+    Sleep(378)
     Send("{Space Up}")
     Send("{q}")
-    Sleep(254)
+    Sleep(231)
     DllCall("mouse_event", "UInt", 1, "Int", L2, "Int", 0)
 }
 
