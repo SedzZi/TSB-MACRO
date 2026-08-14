@@ -57,7 +57,7 @@ global lethalv1sleep := 230       ; Wait For Flick (1000 ms = 1 second ----- 230
 
 ; LETHAL V2 MACRO CONTROL
 global lethalv2hk := "r"          ; Lethal V2 Hotkey
-global lethalv2macro := 0         ; Lethal V2 Macro  1 = on ----- 0 = off
+global lethalv2macro := 1         ; Lethal V2 Macro  1 = on ----- 0 = off
 global lethalv2sleep := 180       ; Wait For Flick (1000 ms = 1 second ----- 180 ms = 0.18 second)
 global lethalv2jump := 1          ; Press Space 1 = on ----- 0 = off
 
@@ -66,7 +66,7 @@ global lethalv2jump := 1          ; Press Space 1 = on ----- 0 = off
 
 ;TWİST V1 MACRO CONTROL
 global twistv1hk := "e"           ; Twist V1 Hotkey
-global twistv1macro := 0          ; Twist V1 Macro  1 = on ----- 0 = off
+global twistv1macro := 1          ; Twist V1 Macro  1 = on ----- 0 = off
 
 ;------------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ global seconddegree := 86         ; Twist V2 Second Flick Degree
 
 ; SİDE FRONT DASH MACRO CONTROL
 global sidefrontdashhk := "z"     ; Side Front Dash Hotkey
-global sidefrontdashmacro := 0    ; Side Front Dash  1 = on ----- 0 = off
+global sidefrontdashmacro := 1    ; Side Front Dash  1 = on ----- 0 = off
 global sidedash := 1              ; 1 = Right Dash ----- 0 = Left Dash
 
 ;------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ global backdash2hk := "x"         ; Backdash + 2 Hotkey
 global backdash2macro := 0        ; Backdash + 2 Macro  1 = on ----- 0 = off
 
 global backdash3hk := "c"         ; Backdash + 3 Hotkey
-global backdash3macro := 0        ; Backdash + 3 Macro  1 = on ----- 0 = off
+global backdash3macro := 1        ; Backdash + 3 Macro  1 = on ----- 0 = off
 
 global backdash4hk := "v"         ; Backdash + 4 Hotkey
 global backdash4macro := 0        ; Backdash + 4 Macro  1 = on ----- 0 = off
@@ -107,7 +107,7 @@ global backdash4macro := 0        ; Backdash + 4 Macro  1 = on ----- 0 = off
 
 ; SOLİTUDE DASH MACRO CONTROL (%50 Luck AND Use Saitama)
 global solitudev1hk := "x"        ; Solitude Dash Hotkey
-global solitudev1macro := 0       ; Solitude Dash Macro 1 = on ----- 0 = off
+global solitudev1macro := 1       ; Solitude Dash Macro 1 = on ----- 0 = off
 
 ;------------------------------------------------------------------------------------
 ;------------------------------------------------------------------------------------
@@ -424,7 +424,6 @@ ToggleMacros(hk)
 
 robloxcheck()
 {
-    WinGetPos(&winX, &winY, &winW, &winH, "ahk_exe RobloxPlayerBeta.exe")
     if (robloxcheck1 = 1 && cordcheck = 0)
     {
         if (WinActive("ahk_exe RobloxPlayerBeta.exe"))
@@ -450,12 +449,14 @@ robloxcheck()
         {
             if (hotkeypanel = 1)
             {
+                WinGetPos(&winX, &winY, &winW, &winH, "ahk_exe RobloxPlayerBeta.exe")
                 guiX := winX + 10
                 guiY := winY + winH - 230
                 panel.Show("w140 h220 x" guiX " y" guiY " NoActivate")
             }
             if (statuspanel1 = 1)
             {
+                WinGetPos(&winX, &winY, &winW, &winH, "ahk_exe RobloxPlayerBeta.exe")
                 guiX := winX + 10
                 guiY := winY + winH - 252
                 statuspanel.Show("w140 h20 x" guiX " y" guiY " NoActivate")
