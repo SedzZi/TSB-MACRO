@@ -149,6 +149,7 @@ settings.AddText("x30 y180 h30 0x200", "Wait For Jump :")
 settings.AddText("x30 y220 h30 0x200", "Wait For Dash :")
 settings.AddText("x30 y260 h30 0x200", "Wait For Flick :")
 settings.AddText("x30 y300 h30 0x200", "Dash Style :")
+solitext := settings.AddText("x30 y340 h30 0x200", "Wait For Flick :")
 
 global solitudemacro := settings.AddCheckBox("x30 y100", "Solitude")
 global solitudehk := settings.AddHotkey("x180 y140 w110 Center", "t")
@@ -156,6 +157,7 @@ global solitudesleep1 := settings.AddEdit("x180 y180 w110 h30 Center +Number", "
 global solitudesleep2 := settings.AddEdit("x180 y220 w110 h30 Center +Number", "357")
 global solitudesleep3 := settings.AddEdit("x180 y260 w110 h30 Center +Number", "232")
 global solitudedashstyle := settings.AddDropDownList("x180 y300 w110 Choose1", ["1", "2"])
+global solitudesleep4 := settings.AddEdit("x180 y340 w110 h30 Center +Number", "232")
 
 tabs.UseTab(7)
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "TRUE DOWNSLAM")
@@ -250,6 +252,7 @@ solitudesleep1.OnEvent("Change", savesettings)
 solitudesleep2.OnEvent("Change", savesettings)
 solitudesleep3.OnEvent("Change", savesettings)
 solitudedashstyle.OnEvent("Change", savesettings)
+solitudesleep4.OnEvent("Change", savesettings)
 
 truedownslamhk.OnEvent("Change", focused)
 truedownslamhk.OnEvent("Change", savesettings)
@@ -534,7 +537,7 @@ calculator(*) {
     val := robloxsensivity.Value
     sens := IsNumber(val) && Float(val) > 0 ? Float(val) : 0.4
 
-    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350, r7 := -101.2
+    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350, r7 := -101.2, r8 := -102.4
     global L1 := r1 / sens
     global L2 := r2 / sens
     global T1 := r3 / sens
@@ -542,6 +545,7 @@ calculator(*) {
     global T3 := r5 / sens
     global L3 := r6 / sens
     global L4 := r7 / sens
+    global S1 := r8 / sens
 
     global ref := 720
     global ref2 := ref / sens
@@ -557,6 +561,18 @@ savesettings(*) {
     saving()
     paneltext()
     cordcheck.Visible := false
+    if (solitudedashstyle.Text = "1")
+    {
+        solitext.Visible := false
+        solitudesleep4.Visible := false
+        solitudesleep3.Enabled := true
+    }
+    else if (solitudedashstyle.Text = "2")
+    {
+        solitext.Visible := true
+        solitudesleep4.Visible := true
+        solitudesleep3.Enabled := false
+    }
     if (lthshiftlock.Text = "Shiftlock")
     {
         lthtext2.Visible := true
@@ -565,11 +581,13 @@ savesettings(*) {
         {
             lthsleep2.Visible := false
             lthtext.Visible := false
+            lthsleep.Enabled := true
         }
         else if (lthdashstyle.Text = "2")
         {
             lthsleep2.Visible := true
             lthtext.Visible := true
+            lthsleep.Enabled := false
         }
     }
     else if (lthshiftlock.Text = "Unshiftlock")
@@ -578,6 +596,7 @@ savesettings(*) {
         lthtext.Visible := false
         lthdashstyle.Visible := false
         lthtext2.Visible := false
+        lthsleep.Enabled := false
     }
 
     if (!hotkeypanel.Value) 
@@ -926,10 +945,10 @@ solitude(*)
         Sleep(Integer(solitudesleep2.Value))
         Send("{Space Up}")
         Send("{q}")
-        Sleep(Integer(solitudesleep3.Value))
+        Sleep(Integer(solitudesleep4.Value))
         loop 4
         {
-            DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
+            DllCall("mouse_event", "UInt", 1, "Int", S1, "Int", 0)
             Sleep(20)
         }
     }
