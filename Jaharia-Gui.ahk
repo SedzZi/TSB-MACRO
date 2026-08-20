@@ -53,7 +53,7 @@ settings.AddText("x30 y100 h30 0x200", "Roblox Sensitivity :")
 settings.AddText("x30 y140 h30 0x200", "Exit Macro Hotkey :")
 settings.AddText("x30 y180 h30 0x200", "Macro On-Off Hotkey :")
 settings.AddText("x30 y220 h30 0x200", "Hide Menu Hotkey :")
-settings.AddText("x30 y260 h30 0x200", "Hotkey Menu Opacity (255 Max) :")
+settings.AddText("x30 y260 h30 0x200", "Hotkey Panel Opacity (255 Max) :")
 
 global robloxsensivity := settings.AddEdit("x200 y100 w110 h30 Center ", "0.4")
 global exithk := settings.AddHotkey("x200 y140 w110 ", "F1")
