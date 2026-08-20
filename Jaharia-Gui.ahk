@@ -69,13 +69,19 @@ tabs.UseTab(2)
 
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "LETHAL MACRO V1 - V2")
 settings.AddText("x30 y140 h30 0x200", "Lethal V1 Hotkey :")
-settings.AddText("x30 y180 h30 0x200", "Shiftlock Hotkey :")
+settings.AddText("x30 y180 h30 0x200", "Shiftlock Version :")
 settings.AddText("x30 y220 h30 0x200", "Wait For Flick :")
+settings.AddText("x30 y260 h30 0x200", "Auto Jump :")
+global lthtext2 := settings.AddText("x30 y300 h30 0x200", "Dash Style :")
+global lthtext := settings.AddText("x30 y340 h30 0x200", "Wait For Flick :")
 
 global lthmacro := settings.AddCheckBox("x30 y100", "Lethal V1")
 global lthhk := settings.AddHotkey("x180 y140 w110 Center", "r")
 global lthshiftlock := settings.AddDropDownList("x180 y180 w110 Choose1", ["Shiftlock", "Unshiftlock"])
 global lthsleep := settings.AddEdit("x180 y220 w110 h30 Center +Number", "220")
+global lthjump := settings.AddDropDownList("x180 y260 w110 Choose1", ["On", "Off"])
+global lthdashstyle := settings.AddDropDownList("x180 y300 w110 Choose1", ["1", "2"])
+global lthsleep2 := settings.AddEdit("x180 y340 w110 h30 Center +Number", "200")
 
 settings.AddText("x380 y140 h30 0x200", "Lethal V2 Hotkey :")
 settings.AddText("x380 y180 h30 0x200", "Wait For Flick :")
@@ -142,12 +148,14 @@ settings.AddText("x30 y140 h30 0x200", "Solitude Hotkey :")
 settings.AddText("x30 y180 h30 0x200", "Wait For Jump :")
 settings.AddText("x30 y220 h30 0x200", "Wait For Dash :")
 settings.AddText("x30 y260 h30 0x200", "Wait For Flick :")
+settings.AddText("x30 y300 h30 0x200", "Dash Style :")
 
 global solitudemacro := settings.AddCheckBox("x30 y100", "Solitude")
 global solitudehk := settings.AddHotkey("x180 y140 w110 Center", "t")
 global solitudesleep1 := settings.AddEdit("x180 y180 w110 h30 Center +Number", "420")
-global solitudesleep2 := settings.AddEdit("x180 y220 w110 h30 Center +Number", "378")
-global solitudesleep3 := settings.AddEdit("x180 y260 w110 h30 Center +Number", "226")
+global solitudesleep2 := settings.AddEdit("x180 y220 w110 h30 Center +Number", "357")
+global solitudesleep3 := settings.AddEdit("x180 y260 w110 h30 Center +Number", "232")
+global solitudedashstyle := settings.AddDropDownList("x180 y300 w110 Choose1", ["1", "2"])
 
 tabs.UseTab(7)
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "TRUE DOWNSLAM")
@@ -197,6 +205,8 @@ lthhk.OnEvent("Change", focused)
 lthhk.OnEvent("Change", savesettings)
 lthshiftlock.OnEvent("Change", savesettings)
 lthsleep.OnEvent("Change", savesettings)
+lthdashstyle.OnEvent("Change", savesettings)
+lthsleep2.OnEvent("Change", savesettings)
 
 lthv2macro.OnEvent("Click", savesettings)
 lthv2hk.OnEvent("Change", focused)
@@ -239,6 +249,7 @@ solitudehk.OnEvent("Change", savesettings)
 solitudesleep1.OnEvent("Change", savesettings)
 solitudesleep2.OnEvent("Change", savesettings)
 solitudesleep3.OnEvent("Change", savesettings)
+solitudedashstyle.OnEvent("Change", savesettings)
 
 truedownslamhk.OnEvent("Change", focused)
 truedownslamhk.OnEvent("Change", savesettings)
@@ -365,7 +376,7 @@ paneltext()
         text13.Move(10, currentY)
         currentY += spacing
     }
-    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value)
+    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value && !solitudemacro.Value)
     {
         warnings.Value := "NO MACRO SELECTED`nJAHARİA V1`nMADE`nBY`nSEDZ"
     }
@@ -523,13 +534,14 @@ calculator(*) {
     val := robloxsensivity.Value
     sens := IsNumber(val) && Float(val) > 0 ? Float(val) : 0.4
 
-    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350
+    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350, r7 := -101.2
     global L1 := r1 / sens
     global L2 := r2 / sens
     global T1 := r3 / sens
     global T2 := r4 / sens
     global T3 := r5 / sens
     global L3 := r6 / sens
+    global L4 := r7 / sens
 
     global ref := 720
     global ref2 := ref / sens
@@ -545,13 +557,36 @@ savesettings(*) {
     saving()
     paneltext()
     cordcheck.Visible := false
+    if (lthshiftlock.Text = "Shiftlock")
+    {
+        lthtext2.Visible := true
+        lthdashstyle.Visible := true
+        if (lthdashstyle.Text = "1")
+        {
+            lthsleep2.Visible := false
+            lthtext.Visible := false
+        }
+        else if (lthdashstyle.Text = "2")
+        {
+            lthsleep2.Visible := true
+            lthtext.Visible := true
+        }
+    }
+    else if (lthshiftlock.Text = "Unshiftlock")
+    {
+        lthsleep2.Visible := false
+        lthtext.Visible := false
+        lthdashstyle.Visible := false
+        lthtext2.Visible := false
+    }
+
     if (!hotkeypanel.Value) 
     {
         panel.Hide()
         statuspanel.Hide()
+        cordcheck.Visible := false
         return
     }
-
     if (robloxcheck.Value) 
     {
         cordcheck.Visible := true
@@ -566,6 +601,7 @@ savesettings(*) {
     } 
     else 
     {
+        cordcheck.Visible := false
         panel.Show("w130 h220 x0 y810 NoActivate")
         statuspanel.Show("w130 h20 x0 y787 NoActivate")
     }
@@ -636,15 +672,69 @@ lethalv1(*) {
         return
     }
     if (lthshiftlock.Text = "Shiftlock") {
-        Send("{q}")
-        Sleep(Integer(lthsleep.Value))
-        DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
+        if(lthjump.Text = "On")
+        {
+            if (lthdashstyle.Text = "1")
+            {
+                Send("{q}")
+                Send("{Space Down}")
+                Sleep(Integer(lthsleep.Value))
+                DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
+                Send("{Space Up}")
+                return
+            }
+            if (lthdashstyle.Text = "2")
+            {
+                Send("{q}")
+                Send("{Space Down}")
+                Sleep(Integer(lthsleep2.Value))
+                loop 4
+                {
+                    DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
+                    Sleep(15)
+                }
+                Send("{Space Up}")
+                return
+            }
+        }
+        if(lthjump.Text = "Off")
+        {
+            if (lthdashstyle.Text = "1")
+            {
+                Send("{q}")
+                Sleep(Integer(lthsleep.Value))
+                DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
+                return
+            }
+            if (lthdashstyle.Text = "2")
+            {
+                Send("{q}")
+                Sleep(Integer(lthsleep2.Value))
+                loop 4
+                {
+                    DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
+                    Sleep(15)
+                }
+                return
+            }
+        }
     }
     else
     {
-        Send("{q}")
-        Sleep(Integer(lthsleep.Value))
-        Send("{Shift}")
+        if(lthjump.Text = "On")
+        {
+            Send("{q}")
+            Send("{Space Down}")
+            Sleep(Integer(lthsleep.Value))
+            Send("{Shift}")
+            Send("{Space Up}")
+        }
+        if(lthjump.Text = "Off")
+        {
+            Send("{q}")
+            Sleep(Integer(lthsleep.Value))
+            Send("{Shift}")
+        }
     }
 }
 
@@ -810,7 +900,7 @@ solitude(*)
     {
         return
     }
-    if(solitudemacro.Value)
+    if(solitudemacro.Value && solitudedashstyle.Text = "1")
     {
         Sleep(60)
         Send("{LButton}")
@@ -823,7 +913,27 @@ solitude(*)
         Send("{q}")
         Sleep(Integer(solitudesleep3.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L2, "Int", 0)
+        return
     }
+    if(solitudemacro.Value && solitudedashstyle.Text = "2")
+    {
+        Sleep(120)
+        Send("{LButton}")
+        Sleep(100)
+        Send("{Space Down}")
+        Sleep(Integer(solitudesleep1.Value))
+        Send("{LButton}")
+        Sleep(Integer(solitudesleep2.Value))
+        Send("{Space Up}")
+        Send("{q}")
+        Sleep(Integer(solitudesleep3.Value))
+        loop 4
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
+            Sleep(20)
+        }
+    }
+    
     
 }
 
@@ -844,6 +954,8 @@ truedownslam(*)
         Send("{LButton Up}")
     }   
 }
+
+
 settings.Show("w700 h500")
 savesettings()
 focused()
