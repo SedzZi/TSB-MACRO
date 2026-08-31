@@ -29,11 +29,16 @@ WinSetTransparent(90, statuspanel.Hwnd)
 
 
 
-global tabs := settings.AddTab3("w680 h410 x10 y10", ["General", "Lethal", "Twist", "Side Front Dash", "Backdash", "Solitude", "Downslam"])
+global tabs := settings.AddTab3("w680 h410 x10 y10", ["General", "Lethal", "Twist", "Side Front Dash", "Backdash", "Solitude", "Downslam", "EmoteBC"])
 settings.SetFont("c080808 s11 bold", "Segoe UI")
 
 
-
+#Requires AutoHotkey v2.0
+#MaxThreadsPerHotkey 255
+A_MaxHotkeysPerInterval := 2000
+SendMode("Input") 
+CoordMode("Mouse", "Screen")
+DllCall("timeBeginPeriod", "UInt", 1)
 
 
 
@@ -167,11 +172,12 @@ global truedownslamhk := settings.AddHotkey("x180 y140 w110 Center", "h")
 settings.AddText("x30 y180 h30 0x200", "Wait For Space :")
 global truedownslamsleep := settings.AddEdit("x180 y180 w110 h30 Center +Number", "50")
 
+tabs.UseTab(8)
+settings.AddText("x0 y50 w700 Center +BackgroundTrans", "EMOTE BACKDASH")
+settings.AddText("x30 y140 h30 0x200", "EemoteBC Hotkey :")
 
-
-
-
-
+global emotebcmacro := settings.AddCheckBox("x30 y100", "Solitude")
+global emotebchk := settings.AddHotkey("x180 y140 w110 Center", "t")
 
 tabs.UseTab()
 
@@ -259,6 +265,9 @@ truedownslamhk.OnEvent("Change", savesettings)
 truedownslammacro.OnEvent("Click", savesettings)
 truedownslamsleep.OnEvent("Change", savesettings)
 
+emotebchk.OnEvent("Change", focused)
+emotebchk.OnEvent("Change", savesettings)
+emotebcmacro.OnEvent("Click", savesettings)
 
 global warnings := panel.AddText("x0 y10 w130 h100 Center ", "")
 warnings.SetFont("s7.1 bold cf72821", "Verdana")
@@ -281,7 +290,7 @@ global text10 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text11 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text12 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text13 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
-
+global text14 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 
 
 global macros := [
@@ -299,6 +308,7 @@ global macros := [
     { hotkey: backdash4hk,            function: backdash4,              roblox: true },
     { hotkey: solitudehk,             function: solitude,               roblox: true },
     { hotkey: truedownslamhk,         function: truedownslam,           roblox: true },
+    { hotkey: emotebchk,              function: emotebc,                roblox: true },
 ]
 
 
@@ -309,7 +319,7 @@ paneltext()
     panel.SetFont("s7 norm c00FF00", "Verdana")
     currentY := 5
     spacing  := 15
-    for ctrl in [warnings, text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, text13]
+    for ctrl in [warnings, text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, text13, text14]
     {
         ctrl.Value := ""
     }
@@ -379,7 +389,13 @@ paneltext()
         text13.Move(10, currentY)
         currentY += spacing
     }
-    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value && !solitudemacro.Value)
+    if (emotebcmacro.Value)
+    {
+        text14.Value := "Emote BC >> [" emotebchk.Value "]"
+        text14.Move(10, currentY)
+        currentY += spacing
+    }
+    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value && !solitudemacro.Value && !emotebcmacro.Value)
     {
         warnings.Value := "NO MACRO SELECTED`nJAHARİA V1`nMADE`nBY`nSEDZ"
     }
@@ -685,6 +701,21 @@ st(*)
     }
 }
 
+
+preciseSleep(ms) {
+    static freq := 0
+    if (!freq)
+        DllCall("QueryPerformanceFrequency", "Int64*", &freq)
+    
+    DllCall("QueryPerformanceCounter", "Int64*", &start := 0)
+    target := start + (ms * freq / 1000)
+    
+    current := 0
+    while (current < target)
+        DllCall("QueryPerformanceCounter", "Int64*", &current)
+}
+
+
 lethalv1(*) {
     if (!lthmacro.Value || !macrosEnabled)
     {
@@ -697,7 +728,7 @@ lethalv1(*) {
             {
                 Send("{q}")
                 Send("{Space Down}")
-                Sleep(Integer(lthsleep.Value))
+                PreciseSleep(Integer(lthsleep.Value))
                 DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
                 Send("{Space Up}")
                 return
@@ -706,11 +737,11 @@ lethalv1(*) {
             {
                 Send("{q}")
                 Send("{Space Down}")
-                Sleep(Integer(lthsleep2.Value))
+                PreciseSleep(Integer(lthsleep2.Value))
                 loop 4
                 {
                     DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
-                    Sleep(15)
+                    PreciseSleep(15)
                 }
                 Send("{Space Up}")
                 return
@@ -721,18 +752,18 @@ lethalv1(*) {
             if (lthdashstyle.Text = "1")
             {
                 Send("{q}")
-                Sleep(Integer(lthsleep.Value))
+                PreciseSleep(Integer(lthsleep.Value))
                 DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
                 return
             }
             if (lthdashstyle.Text = "2")
             {
                 Send("{q}")
-                Sleep(Integer(lthsleep2.Value))
+                PreciseSleep(Integer(lthsleep2.Value))
                 loop 4
                 {
                     DllCall("mouse_event", "UInt", 1, "Int", L4, "Int", 0)
-                    Sleep(15)
+                    PreciseSleep(15)
                 }
                 return
             }
@@ -744,14 +775,14 @@ lethalv1(*) {
         {
             Send("{q}")
             Send("{Space Down}")
-            Sleep(Integer(lthsleep.Value))
+            PreciseSleep(Integer(lthsleep.Value))
             Send("{Shift}")
             Send("{Space Up}")
         }
         if(lthjump.Text = "Off")
         {
             Send("{q}")
-            Sleep(Integer(lthsleep.Value))
+            PreciseSleep(Integer(lthsleep.Value))
             Send("{Shift}")
         }
     }
@@ -767,7 +798,7 @@ lethalv2(*)
     {
         DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
         Send("{q}")
-        Sleep(Integer(lthv2sleep.Value))
+        PreciseSleep(Integer(lthv2sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L3, "Int", 0)
     }
     else if (lthv2macro.Value && lthv2jump.Text = "On")
@@ -775,7 +806,7 @@ lethalv2(*)
         DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
         Send("{Space Down}")
         Send("{q}")
-        Sleep(Integer(lthv2sleep.Value))
+        PreciseSleep(Integer(lthv2sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L3, "Int", 0)
         Send("{Space Up}")
     }
@@ -791,9 +822,9 @@ twistv1(*)
     {
         DllCall("mouse_event", "UInt", 1, "Int", T1, "Int", 0)
         Send("{q}")
-        Sleep(170)
+        PreciseSleep(170)
         DllCall("mouse_event", "UInt", 1, "Int", T2, "Int", 0)
-        Sleep(90)
+        PreciseSleep(90)
         DllCall("mouse_event", "UInt", 1, "Int", T3, "Int", 0)
     }
 }
@@ -808,7 +839,7 @@ twistv2(*)
     {
         DllCall("mouse_event", "UInt", 1, "Int", degree1, "Int", 0)
         Send("{q}")
-        Sleep(Integer(twistv2sleep.Value))
+        PreciseSleep(Integer(twistv2sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", degree2, "Int", 0)
     }
 }
@@ -823,7 +854,7 @@ sidefrontdash(*)
     {
         Send("{q}")
         Send("{d Down}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{d Up}")
     }
@@ -831,7 +862,7 @@ sidefrontdash(*)
     {
         Send("{q}")
         Send("{a Down}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{a Up}")
     }
@@ -847,9 +878,9 @@ backdash1(*)
     {
         Send("{1}")
         Send("{s Down}")
-        Sleep(5)
+        PreciseSleep(5)
         Send("{LButton}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{s Up}")
         Send("{1}")
@@ -866,9 +897,9 @@ backdash2(*)
     {
         Send("{2}")
         Send("{s Down}")
-        Sleep(5)
+        PreciseSleep(5)
         Send("{LButton}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{s Up}")
         Send("{2}")
@@ -885,9 +916,9 @@ backdash3(*)
     {
         Send("{3}")
         Send("{s Down}")
-        Sleep(5)
+        PreciseSleep(5)
         Send("{LButton}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{s Up}")
         Send("{3}")
@@ -904,9 +935,9 @@ backdash4(*)
     {
         Send("{4}")
         Send("{s Down}")
-        Sleep(5)
+        PreciseSleep(5)
         Send("{LButton}")
-        Sleep(10)
+        PreciseSleep(10)
         Send("{q}")
         Send("{s Up}")
         Send("{4}")
@@ -921,35 +952,35 @@ solitude(*)
     }
     if(solitudemacro.Value && solitudedashstyle.Text = "1")
     {
-        Sleep(60)
+        PreciseSleep(60)
         Send("{LButton}")
-        Sleep(110)
+        PreciseSleep(110)
         Send("{Space Down}")
-        Sleep(Integer(solitudesleep1.Value))
+        PreciseSleep(Integer(solitudesleep1.Value))
         Send("{LButton}")
-        Sleep(Integer(solitudesleep2.Value))
+        PreciseSleep(Integer(solitudesleep2.Value))
         Send("{Space Up}")
         Send("{q}")
-        Sleep(Integer(solitudesleep3.Value))
+        PreciseSleep(Integer(solitudesleep3.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L2, "Int", 0)
         return
     }
     if(solitudemacro.Value && solitudedashstyle.Text = "2")
     {
-        Sleep(120)
+        PreciseSleep(120)
         Send("{LButton}")
-        Sleep(100)
+        PreciseSleep(100)
         Send("{Space Down}")
-        Sleep(Integer(solitudesleep1.Value))
+        PreciseSleep(Integer(solitudesleep1.Value))
         Send("{LButton}")
-        Sleep(Integer(solitudesleep2.Value))
+        PreciseSleep(Integer(solitudesleep2.Value))
         Send("{Space Up}")
         Send("{q}")
-        Sleep(Integer(solitudesleep4.Value))
+        PreciseSleep(Integer(solitudesleep4.Value))
         loop 4
         {
             DllCall("mouse_event", "UInt", 1, "Int", S1, "Int", 0)
-            Sleep(20)
+            PreciseSleep(20)
         }
     }
     
@@ -964,14 +995,46 @@ truedownslam(*)
     }
     if (truedownslammacro.Value)
     {
-        Sleep(200)
+        PreciseSleep(200)
         Send("{LButton Down}")
-        Sleep(Integer(truedownslamsleep.Value))
+        PreciseSleep(Integer(truedownslamsleep.Value))
         Send("{Space Down}")
-        Sleep(700)
+        PreciseSleep(700)
         Send("{Space Up}")
         Send("{LButton Up}")
     }   
+}
+
+
+emotebc(*)
+{
+    if (!emotebcmacro.Value || !macrosEnabled)
+    {
+        return
+    }
+    if (emotebcmacro.Value)
+    {
+        Send("{Shift}")
+        PreciseSleep(10)
+        MouseMove(1124, 542)
+        PreciseSleep(5)
+        MouseMove(1124, 543)
+        PreciseSleep(10)
+        Send("{b Down}")
+        Send("{b Up}")
+        Click("Down")
+        PreciseSleep(20)
+        Click("Up")
+        Send("{s Down}")
+        PreciseSleep(20)
+        Send("{q Down}")
+        Send("{q Up}")
+        Send("{s Up}")
+        Click("Down")
+        Click("Up")
+        PreciseSleep(30)
+    }
+    
 }
 
 
