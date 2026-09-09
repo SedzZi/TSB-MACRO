@@ -1,5 +1,11 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
+#MaxThreadsPerHotkey 255
+A_MaxHotkeysPerInterval := 2000
+SendMode("Input") 
+CoordMode("Mouse", "Screen")
+DllCall("timeBeginPeriod", "UInt", 1)
+
 
 global macrosEnabled := true
 
@@ -7,17 +13,19 @@ settings := Gui("+Border ", "Jaharia")
 settings.BackColor := "bcdcfc"
 settings.SetFont("c080808 s10 bold", "Arial")
 
-info := Gui("+Border +Owner -Caption", "Jaharia")
+info := Gui("+Border -Caption", "Jaharia")
 info.BackColor := "3f3e3e"
 info.SetFont("cf7f1f1 s10 bold", "Arial")
-yt := info.AddText("x130 y330 w140 h40 Center 0x200 Border Background313131", "YOUTUBE")
-back := info.AddText("x130 y280 w140 h40 Center 0x200 Border Background313131", "BACK TO MACRO")
+dc := info.AddText("x130 y230 w140 h40 Center 0x200 Border Background333333", "DISCORD")
+yt := info.AddText("x130 y280 w140 h40 Center 0x200 Border Background333333", "YOUTUBE")
+back := info.AddText("x130 y330 w140 h40 Center 0x200 Border Background0f0f0f", "BACK TO MACRO")
 
-info.AddText("x50 y60 w300 h200 Center +Wrap ", "Greetings! This macro was made by Sedz for the Roblox game The Strongest Battlegrounds. If you notice any bugs or issues, please let me know!")
+info.AddText("x50 y60 w300 h150 Center +Wrap ", "Greetings! This macro was made by Sedz for the Roblox game The Strongest Battlegrounds. If you notice any bugs or issues, please let me know!")
 info.SetFont("cf7f1f1 s13 bold", "Arial")
-info.AddText("x0 y10 w400 h30 Center 0x200", "Jaharia V1")
+info.AddText("x0 y10 w400 h30 Center 0x200", "Jaharia TSB Macro")
 back.OnEvent("Click", backk)
 yt.OnEvent("Click", ytt)
+dc.OnEvent("Click", dcc)
 
 panel := Gui("+AlwaysOnTop -Caption +Border +E0x20 +E0x80000 +ToolWindow +Owner", "")
 panel.BackColor := "000000"
@@ -29,16 +37,11 @@ WinSetTransparent(90, statuspanel.Hwnd)
 
 
 
-global tabs := settings.AddTab3("w680 h410 x10 y10", ["General", "Lethal", "Twist", "Side Front Dash", "Backdash", "Solitude", "Downslam", "EmoteBC"])
+global tabs := settings.AddTab3("w680 h410 x10 y10", ["General", "Lethal", "Twist", "Side Front Dash", "Backdash", "Solitude", "Downslam", "EmoteBC", "Fun"])
 settings.SetFont("c080808 s11 bold", "Segoe UI")
 
 
-#Requires AutoHotkey v2.0
-#MaxThreadsPerHotkey 255
-A_MaxHotkeysPerInterval := 2000
-SendMode("Input") 
-CoordMode("Mouse", "Screen")
-DllCall("timeBeginPeriod", "UInt", 1)
+
 
 
 
@@ -156,7 +159,7 @@ settings.AddText("x30 y260 h30 0x200", "Wait For Flick :")
 settings.AddText("x30 y300 h30 0x200", "Dash Style :")
 solitext := settings.AddText("x30 y340 h30 0x200", "Wait For Flick :")
 
-global solitudemacro := settings.AddCheckBox("x30 y100", "Solitude")
+global solitudemacro := settings.AddCheckBox("x30 y100", "Solitude (Trash Macro)")
 global solitudehk := settings.AddHotkey("x180 y140 w110 Center", "t")
 global solitudesleep1 := settings.AddEdit("x180 y180 w110 h30 Center +Number", "420")
 global solitudesleep2 := settings.AddEdit("x180 y220 w110 h30 Center +Number", "357")
@@ -174,10 +177,19 @@ global truedownslamsleep := settings.AddEdit("x180 y180 w110 h30 Center +Number"
 
 tabs.UseTab(8)
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "EMOTE BACKDASH")
-settings.AddText("x30 y140 h30 0x200", "EemoteBC Hotkey :")
+settings.AddText("x30 y140 h30 0x200", "EmoteBC Hotkey :")
 
 global emotebcmacro := settings.AddCheckBox("x30 y100", "Solitude")
 global emotebchk := settings.AddHotkey("x180 y140 w110 Center", "t")
+
+tabs.UseTab(9)
+settings.AddText("x0 y50 w700 Center +BackgroundTrans", "FUN")
+settings.AddText("x30 y140 h30 0x200", "Super Jump Hotkey :")
+settings.AddText("x30 y180 h30 0x200", "Dash :")
+
+global superjumpmacro := settings.AddCheckBox("x30 y100", "Super Jump")
+global superjumphk := settings.AddHotkey("x180 y140 w110 Center", "z")
+global superjumpdash := settings.AddDropDownList("x180 y180 w110 Choose1", ["Right", "Left"])
 
 tabs.UseTab()
 
@@ -269,6 +281,13 @@ emotebchk.OnEvent("Change", focused)
 emotebchk.OnEvent("Change", savesettings)
 emotebcmacro.OnEvent("Click", savesettings)
 
+superjumphk.OnEvent("Change", focused)
+superjumphk.OnEvent("Change", savesettings)
+superjumpmacro.OnEvent("Click", savesettings)
+superjumpdash.OnEvent("Change", savesettings)
+
+
+
 global warnings := panel.AddText("x0 y10 w130 h100 Center ", "")
 warnings.SetFont("s7.1 bold cf72821", "Verdana")
 
@@ -291,6 +310,7 @@ global text11 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text12 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text13 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 global text14 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
+global text15 := panel.Add("Text", "x10  y5  w280 BackgroundTrans", "")
 
 
 global macros := [
@@ -309,6 +329,7 @@ global macros := [
     { hotkey: solitudehk,             function: solitude,               roblox: true },
     { hotkey: truedownslamhk,         function: truedownslam,           roblox: true },
     { hotkey: emotebchk,              function: emotebc,                roblox: true },
+    { hotkey: superjumphk,            function: superjumpp,             roblox: true }
 ]
 
 
@@ -319,7 +340,7 @@ paneltext()
     panel.SetFont("s7 norm c00FF00", "Verdana")
     currentY := 5
     spacing  := 15
-    for ctrl in [warnings, text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, text13, text14]
+    for ctrl in [warnings, text1, text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, text13, text14, text15]
     {
         ctrl.Value := ""
     }
@@ -395,7 +416,13 @@ paneltext()
         text14.Move(10, currentY)
         currentY += spacing
     }
-    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value && !solitudemacro.Value && !emotebcmacro.Value)
+    if (superjumpmacro.Value)
+    {
+        text15.Value := "Super Jump >> [" superjumphk.Value "]"
+        text15.Move(10, currentY)
+        currentY += spacing
+    }
+    if (!sidefrontdashmacro.Value && !twistv2macro.Value && !twistv1macro.Value && !lthv2macro.Value && !lthmacro.Value && !backdash1macro.Value && !backdash2macro.Value && !backdash3macro.Value && !backdash4macro.Value && !truedownslammacro.Value && !solitudemacro.Value && !emotebcmacro.Value && !superjumpmacro.Value)
     {
         warnings.Value := "NO MACRO SELECTED`nJAHARİA V1`nMADE`nBY`nSEDZ"
     }
@@ -549,6 +576,9 @@ backk(*) {
     focused()
 }
 
+dcc(*) {
+    Run("https://discordapp.com/users/806619890835914833")
+}
 calculator(*) {
     val := robloxsensivity.Value
     sens := IsNumber(val) && Float(val) > 0 ? Float(val) : 0.4
@@ -721,7 +751,8 @@ lethalv1(*) {
     {
         return
     }
-    if (lthshiftlock.Text = "Shiftlock") {
+    if (lthshiftlock.Text = "Shiftlock")
+    {
         if(lthjump.Text = "On")
         {
             if (lthdashstyle.Text = "1")
@@ -952,7 +983,7 @@ solitude(*)
     }
     if(solitudemacro.Value && solitudedashstyle.Text = "1")
     {
-        PreciseSleep(60)
+        PreciseSleep(120)
         Send("{LButton}")
         PreciseSleep(110)
         Send("{Space Down}")
@@ -963,7 +994,6 @@ solitude(*)
         Send("{q}")
         PreciseSleep(Integer(solitudesleep3.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L2, "Int", 0)
-        return
     }
     if(solitudemacro.Value && solitudedashstyle.Text = "2")
     {
@@ -1005,7 +1035,6 @@ truedownslam(*)
     }   
 }
 
-
 emotebc(*)
 {
     if (!emotebcmacro.Value || !macrosEnabled)
@@ -1017,27 +1046,59 @@ emotebc(*)
         Send("{Shift}")
         PreciseSleep(10)
         MouseMove(1124, 542)
-        PreciseSleep(5)
+        MouseMove(1122, 543)
         MouseMove(1124, 543)
         PreciseSleep(10)
         Send("{b Down}")
         Send("{b Up}")
-        Click("Down")
+        PreciseSleep(40)
+
+        Click("Down Left")
+        Click("Up Left")
         PreciseSleep(20)
-        Click("Up")
         Send("{s Down}")
-        PreciseSleep(20)
+        PreciseSleep(10)
         Send("{q Down}")
         Send("{q Up}")
         Send("{s Up}")
-        Click("Down")
-        Click("Up")
+        PreciseSleep(20)
+        Click("Down Left")
+        Click("Up Left")
         PreciseSleep(30)
+        Send("{Shift}")
     }
     
 }
 
-
+superjumpp(*)
+{
+    if (!superjumpmacro.Value || !macrosEnabled)
+    {
+        return
+    }
+    if (superjumpmacro.Value && superjumpdash.Text = "Right")
+    {
+        Send("{d Down}")
+        PreciseSleep(3)
+        Send("{q}")
+        PreciseSleep(3)
+        Send("{Space Down}")
+        PreciseSleep(10)
+        Send("{Space Up}")
+        Send("{d Up}")
+    }
+    if (superjumpmacro.Value && superjumpdash.Text = "Left")
+    {
+        Send("{a Down}")
+        PreciseSleep(3)
+        Send("{q}")
+        PreciseSleep(3)
+        Send("{Space Down}")
+        PreciseSleep(10)
+        Send("{Space Up}")
+        Send("{a Up}")
+    }
+}
 settings.Show("w700 h500")
 savesettings()
 focused()
