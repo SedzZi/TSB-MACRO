@@ -13,6 +13,7 @@ settings := Gui("+Border ", "Jaharia")
 settings.BackColor := "bcdcfc"
 settings.SetFont("c080808 s10 bold", "Arial")
 
+
 info := Gui("+Border -Caption", "Jaharia")
 info.BackColor := "3f3e3e"
 info.SetFont("cf7f1f1 s10 bold", "Arial")
@@ -29,11 +30,11 @@ dc.OnEvent("Click", dcc)
 
 panel := Gui("+AlwaysOnTop -Caption +Border +E0x20 +E0x80000 +ToolWindow +Owner", "")
 panel.BackColor := "000000"
-WinSetTransparent(90, panel.Hwnd)
+WinSetTransparent(220, panel.Hwnd)
 
 statuspanel := Gui("+AlwaysOnTop -Caption +Border +E0x20 +E0x80000 +ToolWindow +Owner", "")
 statuspanel.BackColor := "000000"
-WinSetTransparent(90, statuspanel.Hwnd)
+WinSetTransparent(220, statuspanel.Hwnd)
 
 
 
@@ -67,7 +68,7 @@ global robloxsensivity := settings.AddEdit("x200 y100 w110 h30 Center ", "0.4")
 global exithk := settings.AddHotkey("x200 y140 w110 ", "F1")
 global togglehk := settings.AddHotkey("x200 y180 w110 ", "F2")
 global menutogglehk := settings.AddHotkey("x200 y220 w110 ", "F3")
-global hkmenuopacity := settings.AddEdit("x280 y260 w110 h30 +Number Center ", "90")
+global hkmenuopacity := settings.AddEdit("x280 y260 w110 h30 +Number Center ", "220")
 
 global hotkeypanel := settings.AddCheckBox("x400 y100", "Hotkey Panel")
 global robloxcheck := settings.AddCheckBox("x400 y140", "Roblox Check")
@@ -94,19 +95,31 @@ global lthsleep2 := settings.AddEdit("x180 y340 w110 h30 Center +Number", "200")
 settings.AddText("x380 y140 h30 0x200", "Lethal V2 Hotkey :")
 settings.AddText("x380 y180 h30 0x200", "Wait For Flick :")
 settings.AddText("x380 y220 h30 0x200", "Auto Jump :")
+settings.AddText("x380 y260 h30 0x200", "Dash Style :")
 
 global lthv2macro := settings.AddCheckBox("x380 y100", "Lethal V2")
 global lthv2hk := settings.AddHotkey("x530 y140 w110 Center", "r")
 global lthv2sleep := settings.AddEdit("x530 y180 w110 h30 Center +Number", "190")
 global lthv2jump := settings.AddDropDownList("x530 y220 w110 Choose1", ["On", "Off"])
+global lthv2dashstyle := settings.AddDropDownList("x530 y260 w110 Choose1", ["1", "2"])
+global lthv2sleep2 := settings.AddEdit("x530 y300 w110 h30 Center +Number", "75")
+global lthv2text := settings.AddText("x380 y300 h30 0x200", "Wait For Flick :") 
 
 tabs.UseTab(3)
 
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "TWIST V1 - V2")
 settings.AddText("x30 y140 h30 0x200", "Twist V1 Hotkey :")
+settings.AddText("x30 y180 h30 0x200", "Wait For Flick :")
+settings.AddText("x30 y220 h30 0x200", "Wait For 2th Flick :")
+settings.AddText("x30 y260 h30 0x200", "Dash Style :")
+global twistv1text := settings.AddText("x30 y300 h30 0x200", "Wait For Flick :")
 
 global twistv1macro := settings.AddCheckBox("x30 y100", "Twist V1")
 global twistv1hk := settings.AddHotkey("x180 y140 w110 Center", "e")
+global twistv1sleep := settings.AddEdit("x180 y180 w110 h30 Center +Number", "170")
+global twistv1sleep2 := settings.AddEdit("x180 y220 w110 h30 Center +Number", "90")
+global twistv1dashstyle := settings.AddDropDownList("x180 y260 w110 Choose1", ["1", "2"])
+global twistv1sleep3 := settings.AddEdit("x180 y300 w110 h30 Center +Number", "110")
 
 settings.AddText("x380 y140 h30 0x200", "Twist V2 Hotkey :")
 settings.AddText("x380 y180 h30 0x200", "1th Flick Degree :")
@@ -172,8 +185,12 @@ settings.AddText("x0 y50 w700 Center +BackgroundTrans", "TRUE DOWNSLAM")
 global truedownslammacro := settings.AddCheckBox("x30 y100", "True Downslam")
 settings.AddText("x30 y140 h30 0x200", "TD Hotkey :")
 global truedownslamhk := settings.AddHotkey("x180 y140 w110 Center", "h")
-settings.AddText("x30 y180 h30 0x200", "Wait For Space :")
+settings.AddText("x30 y180 h30 0x200", "Wait For Jump :")
 global truedownslamsleep := settings.AddEdit("x180 y180 w110 h30 Center +Number", "50")
+settings.AddText("x30 y220 h30 0x200", "Hit + Jump Mode :")
+global hitxjumpmode := settings.AddDropDownList("x180 y220 w110 Choose2", ["On", "Off"])
+global truedownslamsleep2 := settings.AddEdit("x180 y260 w110 h30 Center +Number", "60")
+global truedownslamtext := settings.AddText("x30 y260 h30 0x200", "Wait For Jump :")
 
 tabs.UseTab(8)
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "EMOTE BACKDASH")
@@ -233,10 +250,19 @@ lthv2hk.OnEvent("Change", focused)
 lthv2hk.OnEvent("Change", savesettings)
 lthv2sleep.OnEvent("Change", savesettings)
 lthv2jump.OnEvent("Change", savesettings)
+lthv2dashstyle.OnEvent("Change", savesettings)
+lthv2sleep2.OnEvent("Change", savesettings)
 
 twistv1macro.OnEvent("Click", savesettings)
 twistv1hk.OnEvent("Change", focused)
 twistv1hk.OnEvent("Change", savesettings)
+twistv1dashstyle.OnEvent("Change", savesettings)
+twistv1sleep.OnEvent("Change", savesettings)
+twistv1sleep2.OnEvent("Change", savesettings)
+twistv1sleep3.OnEvent("Change", savesettings)
+
+
+
 
 twistv2macro.OnEvent("Click", savesettings)
 twistv2hk.OnEvent("Change", savesettings)
@@ -276,6 +302,8 @@ truedownslamhk.OnEvent("Change", focused)
 truedownslamhk.OnEvent("Change", savesettings)
 truedownslammacro.OnEvent("Click", savesettings)
 truedownslamsleep.OnEvent("Change", savesettings)
+truedownslamsleep2.OnEvent("Change", savesettings)
+hitxjumpmode.OnEvent("Change", savesettings)
 
 emotebchk.OnEvent("Change", focused)
 emotebchk.OnEvent("Change", savesettings)
@@ -579,11 +607,12 @@ backk(*) {
 dcc(*) {
     Run("https://discordapp.com/users/806619890835914833")
 }
+
 calculator(*) {
     val := robloxsensivity.Value
     sens := IsNumber(val) && Float(val) > 0 ? Float(val) : 0.4
 
-    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350, r7 := -101.2, r8 := -102.4
+    global r1 := 360, r2 := -360, r3 := -100, r4 := 200, r5 := -110, r6 := 350, r7 := -101.2, r8 := -102.4, r9 := 36, r10 := 38.8, r11 := -12, r12 := 36, r13 := -17.6
     global L1 := r1 / sens
     global L2 := r2 / sens
     global T1 := r3 / sens
@@ -592,6 +621,11 @@ calculator(*) {
     global L3 := r6 / sens
     global L4 := r7 / sens
     global S1 := r8 / sens
+    global S2 := r9 / sens
+    global S3 := r10 / sens
+    global S4 := r11 / sens
+    global S5 := r12 / sens
+    global S6 := r13 / sens
 
     global ref := 720
     global ref2 := ref / sens
@@ -607,6 +641,44 @@ savesettings(*) {
     saving()
     paneltext()
     cordcheck.Visible := false
+    if (twistv1dashstyle.Text = "1")
+    {
+        twistv1text.Visible := false
+        twistv1sleep3.Visible := false
+        twistv1sleep.Enabled := true
+        twistv1sleep2.Enabled := true
+    }
+    else if (twistv1dashstyle.Text = "2")
+    {
+        twistv1text.Visible := true
+        twistv1sleep3.Visible := true
+        twistv1sleep.Enabled := false
+        twistv1sleep2.Enabled := false
+    }
+    if (lthv2dashstyle.Text = "1")
+    {
+        lthv2text.Visible := false
+        lthv2sleep2.Visible := false
+        lthv2sleep.Enabled := true
+    }
+    else if (lthv2dashstyle.Text = "2")
+    {
+        lthv2text.Visible := true
+        lthv2sleep2.Visible := true
+        lthv2sleep.Enabled := false
+    }
+    if (hitxjumpmode.Text = "On")
+    {
+        truedownslamsleep.Enabled := false
+        truedownslamtext.Visible := true
+        truedownslamsleep2.Visible := true
+    }
+    else if (hitxjumpmode.Text = "Off")
+    {
+        truedownslamtext.Visible := false
+        truedownslamsleep2.Visible := false
+        truedownslamsleep.Enabled := true
+    }
     if (solitudedashstyle.Text = "1")
     {
         solitext.Visible := false
@@ -825,14 +897,15 @@ lethalv2(*)
     {
         return
     }
-    if (lthv2macro.Value && lthv2jump.Text = "Off")
+    if (lthv2macro.Value && lthv2jump.Text = "Off" && lthv2dashstyle.Text = "1")
     {
         DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
         Send("{q}")
         PreciseSleep(Integer(lthv2sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L3, "Int", 0)
+        return
     }
-    else if (lthv2macro.Value && lthv2jump.Text = "On")
+    if (lthv2macro.Value && lthv2jump.Text = "On" && lthv2dashstyle.Text = "1")
     {
         DllCall("mouse_event", "UInt", 1, "Int", L1, "Int", 0)
         Send("{Space Down}")
@@ -840,7 +913,45 @@ lethalv2(*)
         PreciseSleep(Integer(lthv2sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", L3, "Int", 0)
         Send("{Space Up}")
+        return
     }
+    if (lthv2macro.Value && lthv2jump.Text = "On" && lthv2dashstyle.Text = "2")
+    {
+        Send("{Space Down}")
+        Send("{q}")
+        PreciseSleep(30)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S2, "Int", 0)
+            PreciseSleep(8)
+        }
+        PreciseSleep(70)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S3, "Int", 0)
+            PreciseSleep(5)
+        }
+        Send("{Space Up}")
+        return
+    }
+    if (lthv2macro.Value && lthv2jump.Text = "Off" && lthv2dashstyle.Text = "2")
+    {
+        Send("{q}")
+        PreciseSleep(30)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S2, "Int", 0)
+            PreciseSleep(8)
+        }
+        PreciseSleep(70)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S3, "Int", 0)
+            PreciseSleep(5)
+        }
+        return
+    }
+    
 }
 
 twistv1(*)
@@ -849,14 +960,38 @@ twistv1(*)
     {
         return
     }
-    if (twistv1macro.Value)
+    if (twistv1macro.Value && twistv1dashstyle.Text = "1")
     {
         DllCall("mouse_event", "UInt", 1, "Int", T1, "Int", 0)
         Send("{q}")
-        PreciseSleep(170)
+        PreciseSleep(Integer(twistv1sleep.Value))
         DllCall("mouse_event", "UInt", 1, "Int", T2, "Int", 0)
-        PreciseSleep(90)
+        PreciseSleep(Integer(twistv1sleep2.Value))
         DllCall("mouse_event", "UInt", 1, "Int", T3, "Int", 0)
+        return
+    }
+    if (twistv1macro.Value && twistv1dashstyle.Text = "2")
+    {
+        Send("{q}")
+        PreciseSleep(Integer(twistv1sleep3.Value))
+        Loop 15
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S4, "Int", 0)
+            PreciseSleep(2)
+        }
+        PreciseSleep(10)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S5, "Int", 0)
+            PreciseSleep(8)
+        }
+        PreciseSleep(10)
+        Loop 10
+        {
+            DllCall("mouse_event", "UInt", 1, "Int", S6, "Int", 0)
+            PreciseSleep(3)
+        }
+        return
     }
 }
 
@@ -1023,7 +1158,7 @@ truedownslam(*)
     {
         return
     }
-    if (truedownslammacro.Value)
+    if (truedownslammacro.Value && hitxjumpmode.Text = "Off")
     {
         PreciseSleep(200)
         Send("{LButton Down}")
@@ -1032,7 +1167,17 @@ truedownslam(*)
         PreciseSleep(700)
         Send("{Space Up}")
         Send("{LButton Up}")
-    }   
+        return
+    }
+    if (truedownslammacro.Value && hitxjumpmode.Text = "On")
+    {
+        Click
+        PreciseSleep(Integer(truedownslamsleep2.Value))
+        Send("{Space Down}")
+        PreciseSleep(50)
+        Send("{Space Up}")
+        return
+    }
 }
 
 emotebc(*)
@@ -1044,7 +1189,7 @@ emotebc(*)
     if (emotebcmacro.Value)
     {
         Send("{Shift}")
-        PreciseSleep(10)
+        PreciseSleep(20)
         MouseMove(1124, 542)
         MouseMove(1122, 543)
         MouseMove(1124, 543)
@@ -1064,7 +1209,7 @@ emotebc(*)
         PreciseSleep(20)
         Click("Down Left")
         Click("Up Left")
-        PreciseSleep(30)
+        PreciseSleep(80)
         Send("{Shift}")
     }
     
