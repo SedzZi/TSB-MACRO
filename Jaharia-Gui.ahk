@@ -203,10 +203,12 @@ tabs.UseTab(9)
 settings.AddText("x0 y50 w700 Center +BackgroundTrans", "FUN")
 settings.AddText("x30 y140 h30 0x200", "Super Jump Hotkey :")
 settings.AddText("x30 y180 h30 0x200", "Dash :")
+settings.AddText("x30 y220 h30 0x200", "Tab Mode :")
 
 global superjumpmacro := settings.AddCheckBox("x30 y100", "Super Jump")
 global superjumphk := settings.AddHotkey("x180 y140 w110 Center", "z")
 global superjumpdash := settings.AddDropDownList("x180 y180 w110 Choose1", ["Right", "Left"])
+global tabmode := settings.AddDropDownList("x180 y220 w110 Choose2", ["On", "Off"])
 
 tabs.UseTab()
 
@@ -1221,27 +1223,67 @@ superjumpp(*)
     {
         return
     }
-    if (superjumpmacro.Value && superjumpdash.Text = "Right")
+    if (superjumpmacro.Value && superjumpdash.Text = "Right" && tabmode.Text = "Off")
     {
         Send("{d Down}")
         PreciseSleep(3)
         Send("{q}")
-        PreciseSleep(3)
+
         Send("{Space Down}")
         PreciseSleep(10)
         Send("{Space Up}")
         Send("{d Up}")
+        return
     }
-    if (superjumpmacro.Value && superjumpdash.Text = "Left")
+    if (superjumpmacro.Value && superjumpdash.Text = "Left" && tabmode.Text = "Off")
     {
         Send("{a Down}")
         PreciseSleep(3)
         Send("{q}")
-        PreciseSleep(3)
+
         Send("{Space Down}")
         PreciseSleep(10)
         Send("{Space Up}")
         Send("{a Up}")
+        return
+    }
+    if (superjumpmacro.Value && superjumpdash.Text = "Right" && tabmode.Text = "On")
+    {
+        MouseMove(500, 3)
+        MouseMove(501, 3)
+        MouseMove(502, 3)
+        PreciseSleep(40)
+        Send("{d Down}")
+        PreciseSleep(3)
+        Send("{q}")
+        
+        Send("{Space Down}")
+        PreciseSleep(50)
+        Click("Left Down")
+        PreciseSleep(800)
+        Click("Left Up")
+        Send("{Space Up}")
+        Send("{d Up}")
+        return
+    }
+    if (superjumpmacro.Value && superjumpdash.Text = "Left" && tabmode.Text = "On")
+    {
+        MouseMove(500, 3)
+        MouseMove(501, 3)
+        MouseMove(502, 3)
+        PreciseSleep(40)
+        Send("{a Down}")
+        PreciseSleep(3)
+        Send("{q}")
+        
+        Send("{Space Down}")
+        PreciseSleep(50)
+        Click("Left Down")
+        PreciseSleep(800)
+        Click("Left Up")
+        Send("{Space Up}")
+        Send("{a Up}")
+        return
     }
 }
 settings.Show("w700 h500")
